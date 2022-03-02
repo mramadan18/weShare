@@ -1,4 +1,18 @@
-// SIDEBAR
+localStorage
+  ? document
+      .querySelector("body")
+      .classList.add(`${localStorage.getItem("dark-mode")}`)
+  : false;
+
+// window.onload = function () {
+//   document.querySelector(".loading").style.display = "none";
+// };
+
+setTimeout(() => {
+  document.querySelector(".loading").style.display = "none";
+}, 5000);
+
+// SIDEBARx
 const menuItems = document.querySelectorAll(".menu-item");
 
 // MESSAGES
@@ -19,13 +33,6 @@ const fontSizes = document.querySelectorAll(".choose-size span");
 let root = document.querySelector(":root");
 const colorPalette = document.querySelectorAll(".choose-color span");
 const colorBgs = document.querySelectorAll(".choose-bg > div");
-
-// Stories
-const prevBtn = document.querySelector(".slider .before");
-const nextBtn = document.querySelector(".slider .after");
-const slider = document.querySelector(".slider .stories");
-const scrollStory = document.querySelector(".slider .stories > div");
-const stories = document.querySelectorAll(".stories .story");
 
 // CREATE POST
 const createPost = document.querySelector(".create-post input");
@@ -89,7 +96,6 @@ messageSearch.addEventListener("input", searchMessage);
 
 // hightlight messages card when messages menu item is clicked
 messagesNotification.addEventListener("click", () => {
-  messageSearch.focus();
   messages.style.boxShadow = "0 0 1rem var(--color-primary)";
   messagesNotification.querySelector(".notifications-count").style.display =
     "none";
@@ -200,31 +206,213 @@ colorPalette.forEach((color) => {
 colorBgs.forEach((bg) => {
   bg.addEventListener("click", () => {
     changeActiveItem(colorBgs);
+
     bg.classList.add("active");
 
-    root.style.setProperty(
-      "--white-color-lightness",
-      bg.getAttribute("data-white-bg")
-    );
-    root.style.setProperty(
-      "--light-color-lightness",
-      bg.getAttribute("data-light-bg")
-    );
-    root.style.setProperty(
-      "--dark-color-lightness",
-      bg.getAttribute("data-dark-bg")
-    );
+    if (bg.classList.contains("bg-2")) {
+      document.querySelector("body").classList.add("dark-theme-variables");
+      localStorage.setItem("dark-mode", "dark-theme-variables");
+    } else {
+      document.querySelector("body").className = "";
+      localStorage ? localStorage.removeItem("dark-mode") : false;
+    }
   });
 });
 
 /**************************** STORIES ****************************/
-stories.forEach((story) => {
-  story.style.backgroundImage = `url(${story.getAttribute("data-bg-story")})`;
-  story.style.order = `${story.getAttribute("data-order")}`;
-  scrollStory.style.width = `${stories.length * 7.2972}rem`;
+
+const Stories = [
+  {
+    current: 1,
+    order: 3,
+    position: 0,
+    nameProfile: "Mike Tyson",
+    imgProfile: "images/profile-19.jpg",
+    storyContent: "images/profile-19.jpg",
+  },
+  {
+    current: 2,
+    order: 4,
+    position: -100,
+    nameProfile: "Ernest Achiever",
+    imgProfile: "images/profile-21.jpg",
+    storyContent: "images/profile-21.jpg",
+  },
+  {
+    current: 3,
+    order: 5,
+    position: -200,
+    nameProfile: "Jackson Henry",
+    imgProfile: "images/profile-22.jpg",
+    storyContent: "images/profile-22.jpg",
+  },
+  {
+    current: 4,
+    order: 6,
+    position: -300,
+    nameProfile: "Sebastian Aiden",
+    imgProfile: "images/profile-23.jpg",
+    storyContent: "images/profile-23.jpg",
+  },
+  {
+    current: 5,
+    order: 7,
+    position: -400,
+    nameProfile: "Matthew Samuel",
+    imgProfile: "images/profile-24.jpg",
+    storyContent: "images/profile-24.jpg",
+  },
+  {
+    current: 6,
+    order: 8,
+    position: -500,
+    nameProfile: "David Carter",
+    imgProfile: "images/profile-25.jpg",
+    storyContent: "images/profile-25.jpg",
+  },
+  {
+    current: 7,
+    order: 9,
+    position: -600,
+    nameProfile: "Owen Jack",
+    imgProfile: "images/profile-26.jpg",
+    storyContent: "images/profile-26.jpg",
+  },
+  {
+    current: 8,
+    order: 10,
+    position: -700,
+    nameProfile: "Jayden Dylan",
+    imgProfile: "images/profile-27.jpg",
+    storyContent: "images/profile-27.jpg",
+  },
+];
+
+const createStoryElements = ({
+  current,
+  order,
+  position,
+  nameProfile,
+  imgProfile,
+  storyContent,
+}) => {
+  const storyDiv = document.createElement("div");
+  storyDiv.className = "story";
+  storyDiv.setAttribute("data-bg-story", storyContent);
+  storyDiv.setAttribute("data-order", order);
+  storyDiv.setAttribute("data-position", position);
+  storyDiv.setAttribute("data-current", current);
+  const story = `
+    <div class="profile-photo">
+      <img src="${imgProfile}" />
+    </div>
+    <p class="name">${nameProfile}</p>
+  `;
+
+  storyDiv.innerHTML = story;
+
+  document.querySelector(".stories > div").appendChild(storyDiv);
+
+  const storyShowDiv = document.createElement("div");
+  storyShowDiv.className = "story";
+  storyShowDiv.setAttribute("data-bg-story", storyContent);
+  storyShowDiv.setAttribute("data-order", order);
+  storyShowDiv.setAttribute("data-position", position);
+  storyShowDiv.setAttribute("data-current", current);
+  const storyShow = `
+    <div class="head">
+      <div class="time-story"></div>
+    </div>
+    <div class="info">
+      <div class="img"><img src="${imgProfile}" /></div>
+      <p class="name">${nameProfile}</p>
+    </div>
+    <img src="${storyContent}" />
+  `;
+
+  storyShowDiv.innerHTML = storyShow;
+
+  document.querySelector(".show-stories .slider").appendChild(storyShowDiv);
+};
+
+Stories.forEach((story) => {
+  createStoryElements(story);
 });
 
-// Show next stories
+// Var Stories
+const prevBtn = document.querySelector(".slider .before");
+const nextBtn = document.querySelector(".slider .after");
+const slider = document.querySelector(".slider .stories");
+const scrollStory = document.querySelector(".slider .stories > div");
+const stories = document.querySelectorAll(".stories .story");
+
+const handleStoriesInPage = (stories) => {
+  stories.forEach((story) => {
+    story.style.backgroundImage = `url(${story.getAttribute("data-bg-story")})`;
+    story.style.order = `${story.getAttribute("data-order")}`;
+    scrollStory.style.width = `${stories.length * 7.2972}rem`;
+
+    story.addEventListener("click", (e) => {
+      let target = e.target;
+
+      document.querySelector(
+        ".show-stories .slider"
+      ).style.transform = `translateY(${target.getAttribute(
+        "data-position"
+      )}%)`;
+
+      document
+        .querySelector(
+          `.show-stories .slider [data-position="${target.getAttribute(
+            "data-position"
+          )}"]`
+        )
+        .classList.add("active");
+
+      document.querySelector(".show-stories").style.display = "flex";
+
+      const showPrevStoy = document.querySelector(".show-stories .prev");
+      const showNextStoy = document.querySelector(".show-stories .next");
+      const sliderStory = document.querySelector(".show-stories .slider");
+      const closeShowStory = document.querySelector(".show-stories .close");
+      let currentSliider = parseInt(target.getAttribute("data-current"));
+      let translate = parseInt(target.getAttribute("data-position"));
+      let plus = 100;
+
+      showPrevStoy.addEventListener("click", () => {
+        if (currentSliider != 1) {
+          currentSliider--;
+          for (let i = 0; i < sliderStory.children.length; i++) {
+            sliderStory.children[i].classList.remove("active");
+          }
+          translate += plus;
+          sliderStory.style.transform = `translateY(${translate}%)`;
+          sliderStory.children[currentSliider - 1].classList.add("active");
+        }
+      });
+
+      showNextStoy.addEventListener("click", () => {
+        if (currentSliider != sliderStory.children.length - 1) {
+          currentSliider++;
+          for (let i = 0; i < sliderStory.children.length; i++) {
+            sliderStory.children[i].classList.remove("active");
+          }
+          translate -= plus;
+          sliderStory.style.transform = `translateY(${translate}%)`;
+          sliderStory.children[currentSliider - 1].classList.add("active");
+        }
+      });
+
+      closeShowStory.addEventListener("click", () => {
+        document.querySelector(".show-stories").style.display = "none";
+      });
+    });
+  });
+};
+
+handleStoriesInPage(stories);
+
+// Next stories
 nextBtn.addEventListener("click", () => {
   slider.scrollBy({
     left: 116.8 * 4,
@@ -232,13 +420,17 @@ nextBtn.addEventListener("click", () => {
   });
 });
 
-// Show prev stories
+// Prev stories
 prevBtn.addEventListener("click", () => {
   slider.scrollBy({
     left: -116.8 * 4,
     behavior: "smooth",
   });
 });
+
+/**************************** SHOW STORIES ****************************/
+
+// Var Show Stories
 
 /**************************** CREATE STORY ****************************/
 const addStoryBtn = document.querySelector(".add-story");
@@ -305,7 +497,7 @@ inputFileStory.addEventListener("change", (e) => {
   reader.readAsDataURL(input.files[0]);
 });
 
-const createStoryElements = () => {
+const createMyStoryElements = () => {
   // Start story
   let story = document.createElement("div");
   story.className = "story";
@@ -334,14 +526,11 @@ const createStoryElements = () => {
 
 createStoryBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  createStoryElements();
+  createMyStoryElements();
 
   const stories = document.querySelectorAll(".stories .story");
 
-  stories.forEach((story) => {
-    story.style.backgroundImage = `url(${story.getAttribute("data-bg-story")})`;
-    scrollStory.style.width = `${stories.length * 7.2972}rem`;
-  });
+  handleStoriesInPage(stories);
 
   removeBtnStory.classList.remove("active");
   document.querySelector(".create-stories .add-files").style.display = "flex";
@@ -437,7 +626,7 @@ const createPostElements = () => {
   ingo.appendChild(profileName);
 
   let profileAddress = document.createElement("small");
-  profileAddress.textContent = "Cairo, 15 MINUTES AGO";
+  profileAddress.textContent = "Cairo, NOW";
 
   ingo.appendChild(profileAddress);
 
@@ -446,6 +635,7 @@ const createPostElements = () => {
   head.appendChild(user);
   // END USER
 
+  // START EDIT POST
   let editIcon = document.createElement("span");
   editIcon.className = "edit";
 
@@ -454,7 +644,28 @@ const createPostElements = () => {
 
   editIcon.appendChild(icon);
 
+  let listEdit = document.createElement("div");
+  listEdit.className = "list-edit";
+
+  let items = ["Delete", "Go to Post", "Shere to..", "Copy Link", "Cancel"];
+
+  items.forEach((item, index) => {
+    let div = document.createElement("div");
+    div.className = "item";
+    index == 0
+      ? div.classList.add("warning")
+      : index == items.length - 1
+      ? div.classList.add("cancel")
+      : false;
+    div.textContent = item;
+
+    listEdit.appendChild(div);
+  });
+
   head.appendChild(editIcon);
+
+  head.appendChild(listEdit);
+  // END EDIT POST
 
   feed.appendChild(head);
   // END HEAD
@@ -478,7 +689,7 @@ const createPostElements = () => {
     `${fileTest.firstElementChild.tagName}`
   ).src;
   fileTest.firstElementChild.tagName == "VIDEO"
-    ? photo.setAttribute("controls", "controls")
+    ? photo.setAttribute("controls", "")
     : false;
 
   mainPhoto.appendChild(photo);
@@ -582,8 +793,7 @@ const createPostElements = () => {
 
   let pragraph = document.createElement("p");
   pragraph.innerHTML = `
-    <b>Lana Rose</b> ${textarea.value}
-    <span class="harsh-tag">#lifestyle</span>
+    <b>Mahmoud Ramadan</b> ${textarea.value}
   `;
 
   caption.appendChild(pragraph);
@@ -592,16 +802,50 @@ const createPostElements = () => {
   // END CAPTION
 
   // START COMMENTS
-  let comments = document.createElement("div");
-  comments.className = "comments text-muted";
+  let allCommentsLink = document.createElement("div");
+  allCommentsLink.className = "text-muted";
 
-  comments.textContent = "View all 277 comments";
+  allCommentsLink.textContent = "View all 277 comments";
 
-  feed.appendChild(comments);
+  feed.appendChild(allCommentsLink);
+
+  let commentsBox = document.createElement("div");
+  commentsBox.className = "comments";
+
+  feed.appendChild(commentsBox);
+
+  let addCommentsBox = document.createElement("div");
+  addCommentsBox.className = "add-comment";
+
+  let inputComment = document.createElement("input");
+  inputComment.className = "input";
+  inputComment.type = "text";
+  inputComment.placeholder = "Add a comment...";
+
+  addCommentsBox.appendChild(inputComment);
+
+  let addCommentBtn = document.createElement("i");
+  addCommentBtn.className = "post uil uil-message";
+
+  addCommentsBox.appendChild(addCommentBtn);
+
+  feed.appendChild(addCommentsBox);
   // END COMMENTS
 
   document.querySelector(".feeds").prepend(feed);
   // END FEED
+};
+
+const createCommentElement = (where, comment) => {
+  let commentBox = document.createElement("div");
+  commentBox.className = "comment";
+
+  let commentText = document.createElement("p");
+  commentText.innerHTML = `<b>Mahmoud Ramadan</b> ${comment}`;
+
+  commentBox.appendChild(commentText);
+
+  where.append(commentBox);
 };
 
 createPostBtn.addEventListener("click", (e) => {
@@ -613,72 +857,106 @@ createPostBtn.addEventListener("click", (e) => {
   textarea.value = "";
   fileTest.innerHTML = "";
   fileTest.classList.remove("active");
+  fixPageAfterCreatePosts();
 });
 
-const feeds = document.querySelectorAll(".feeds .feed");
+function fixPageAfterCreatePosts() {
+  const feeds = document.querySelectorAll(".feeds .feed");
 
-feeds.forEach((feed) => {
-  const loveBtn = feed.querySelector(".interaction-buttons span:first-child");
-  loveBtn.addEventListener("click", () => {
-    if (loveBtn.querySelector("i").classList.contains("uil-heart")) {
-      loveBtn.querySelector("i").className = "";
-      loveBtn.querySelector("i").className = "icon-heart";
-    } else {
-      loveBtn.querySelector("i").className = "";
-      loveBtn.querySelector("i").className = "uil uil-heart";
-    }
-  });
-});
-
-const posts = document.querySelectorAll(".feeds .feed .photo");
-let touchtime = 0;
-
-posts.forEach((post) => {
-  post.addEventListener("dblclick", () => {
-    post.querySelector(".overlay i").style.display = "block";
-    post.querySelector(".overlay i").classList.add("animate__heartBeat");
-
-    setTimeout(() => {
-      post.querySelector(".overlay i").style.display = "none";
-    }, 1300);
-
-    post.parentElement.querySelector(
-      ".interaction-buttons span:first-child i"
-    ).className = "icon-heart";
-  });
-
-  post.addEventListener("click", function () {
-    if (touchtime == 0) {
-      // set first click
-      touchtime = new Date().getTime();
-    } else {
-      // compare first click to this click and see if they occurred within double click threshold
-      if (new Date().getTime() - touchtime < 800) {
-        // double click occurred
-        console.log("double clicked");
-        touchtime = 0;
+  feeds.forEach((feed) => {
+    const loveBtn = feed.querySelector(".interaction-buttons span:first-child");
+    loveBtn.addEventListener("click", () => {
+      if (loveBtn.querySelector("i").classList.contains("uil-heart")) {
+        loveBtn.querySelector("i").className = "";
+        loveBtn.querySelector("i").className = "icon-heart";
       } else {
-        // not a double click so set as a new first click
-        touchtime = new Date().getTime();
+        loveBtn.querySelector("i").className = "";
+        loveBtn.querySelector("i").className = "uil uil-heart";
       }
-    }
+    });
   });
-});
 
-const videos = document.querySelectorAll("video");
+  const posts = document.querySelectorAll(".feeds .feed .photo");
 
-window.addEventListener("scroll", () => {
-  videos.forEach((video) => {
-    let videoPosition = video.getBoundingClientRect().top;
-    let screenPosition = window.innerHeight;
+  posts.forEach((post) => {
+    post.addEventListener("dblclick", () => {
+      post.querySelector(".overlay i").style.display = "block";
+      post.querySelector(".overlay i").classList.add("animate__heartBeat");
 
-    if (screenPosition > videoPosition + 350 && videoPosition > 0) {
-      video.play();
-    } else {
-      video.pause();
-    }
+      setTimeout(() => {
+        post.querySelector(".overlay i").style.display = "none";
+      }, 1300);
+
+      post.parentElement.querySelector(
+        ".interaction-buttons span:first-child i"
+      ).className = "icon-heart";
+    });
   });
-});
+
+  const editPostBtn = document.querySelectorAll(".feed .head .edit");
+
+  editPostBtn.forEach((editBtn) => {
+    editBtn.addEventListener("click", () => {
+      editBtn.parentElement.querySelector(".list-edit").style.display = "block";
+    });
+
+    editBtn.parentElement
+      .querySelector(".list-edit .cancel")
+      .addEventListener("click", () => {
+        editBtn.parentElement.querySelector(".list-edit").style.display =
+          "none";
+      });
+  });
+
+  const videos = document.querySelectorAll("video");
+
+  window.addEventListener("scroll", () => {
+    videos.forEach((video) => {
+      let videoPosition = video.getBoundingClientRect().top;
+      let screenPosition = window.innerHeight;
+
+      if (screenPosition > videoPosition + 350 && videoPosition > 0) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  });
+
+  const addCommentBtn = document.querySelectorAll(".feed .add-comment .post");
+
+  addCommentBtn.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      let commentText = btn.parentElement.querySelector(".input").value;
+      if (commentText != "") {
+        createCommentElement(
+          btn.parentElement.parentElement.querySelector(".comments"),
+          commentText
+        );
+      }
+
+      btn.parentElement.querySelector("input").value = "";
+      btn.parentElement.querySelector(".emojionearea-editor").innerHTML = "";
+    });
+  });
+
+  $(document).ready(function () {
+    $(
+      ".feed .add-comment input.input, .create-posts textarea.input"
+    ).emojioneArea({
+      pickerPosition: "left-top ",
+      search: false,
+      recentEmojis: false,
+      tones: false,
+    });
+  });
+}
+
+fixPageAfterCreatePosts();
+
+// editPostBtn.addEventListener("click", () => {
+//   listEditPost.style.display = "block";
+// });
 
 // videos.forEach((video) => {
 //   console.log(`${video.getBoundingClientRect().top} => ${window.innerHeight}`);
