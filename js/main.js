@@ -1,16 +1,20 @@
-localStorage
-  ? document
-      .querySelector("body")
-      .classList.add(`${localStorage.getItem("dark-mode")}`)
-  : false;
+if (localStorage.getItem("dark-mode")) {
+  document
+    .querySelector("body")
+    .classList.add(`${localStorage.getItem("dark-mode")}`);
 
-// window.onload = function () {
-//   document.querySelector(".loading").style.display = "none";
-// };
+  document.querySelector(".bg-1").classList.remove("active");
 
-setTimeout(() => {
+  document.querySelector(".bg-2").classList.add("active");
+} else {
+  document.querySelector(".bg-2").classList.remove("active");
+
+  document.querySelector(".bg-1").classList.add("active");
+}
+
+window.onload = function () {
   document.querySelector(".loading").style.display = "none";
-}, 5000);
+};
 
 // SIDEBARx
 const menuItems = document.querySelectorAll(".menu-item");
@@ -277,14 +281,6 @@ const Stories = [
     nameProfile: "Owen Jack",
     imgProfile: "images/profile-26.jpg",
     storyContent: "images/profile-26.jpg",
-  },
-  {
-    current: 8,
-    order: 10,
-    position: -700,
-    nameProfile: "Jayden Dylan",
-    imgProfile: "images/profile-27.jpg",
-    storyContent: "images/profile-27.jpg",
   },
 ];
 

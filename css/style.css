@@ -9,7 +9,7 @@
   --color-white: hsl(252, 30%, 100%);
   --color-light: hsl(252, 30%, 95%);
   --color-gray: hsl(252, 15%, 65%);
-  --color-primary: hsl(252, 75%, 60%);
+  --color-primary: hsl(var(--primary-color-hue), 75%, 60%);
   --color-secondary: hsl(252, 100%, 90%);
   --color-success: hsl(120, 95%, 65%);
   --color-danger: hsl(0, 95%, 65%);
@@ -27,7 +27,6 @@
 }
 
 .dark-theme-variables {
-  --color-background: #181a1e;
   --color-white: #202528;
   --color-dark: #edeffd;
   --color-dark-variant: #a3bdcc;
@@ -654,7 +653,8 @@ main .container .left .profile {
 }
 
 .emojionearea-editor {
-  padding-left: 1rem !important;
+  padding-left: 1.5rem !important;
+  color: var(--color-dark) !important;
 }
 
 .emojionearea .emojionearea-button {
@@ -960,7 +960,6 @@ main .container .right {
 /************************** BACKGROUND **************************/
 .customize-theme .background {
   margin-top: 2rem;
-  width: 20rem;
   margin-left: auto;
   margin-right: auto;
 }
@@ -1282,7 +1281,7 @@ main .container .right {
   height: 100%;
   border: 1px solid var(--color-light);
   border-radius: var(--card-border-radius);
-  background-color: var(--color-white);
+  background-color: #181a1e;
   display: flex;
   justify-content: center;
   align-items: center;
